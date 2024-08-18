@@ -3,9 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 
-import { signInStart, signInSuccess, signInFailure, } from "../../redux/slices/userSlice"
+import {
+    signInStart,
+    signInSuccess,
+    signInFailure,
+} from "../../redux/slices/userSlice"
 
 import OAuth from '../../components/OAuth';
+
+import { login_user } from '../../apis/user.api';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -26,20 +32,15 @@ const LoginPage = () => {
         }
         try {
             dispatch(signInStart());
-            const res = await fetch('/api/auth/signin', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
-            const data = await res.json();
-            if (data.success === false) {
-                dispatch(signInFailure(data.message));
+            const response = await login_user(formData)
+
+            if (response.data.success === false) {
+                dispatch(signInFailure(response.data.message));
+                return
             }
 
-            if (res.ok) {
-                dispatch(signInSuccess(data));
-                navigate('/');
-            }
+            dispatch(signInSuccess(response.data));
+            navigate('/');
         } catch (error) {
             dispatch(signInFailure(error.message));
         }

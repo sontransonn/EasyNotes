@@ -9,6 +9,8 @@ import { signoutSuccess } from "../../redux/slices/userSlice"
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun } from 'react-icons/fa';
 
+import { logout } from '../../apis/user.api';
+
 const Header = () => {
     const path = useLocation().pathname;
     const location = useLocation();
@@ -22,11 +24,8 @@ const Header = () => {
 
     const handleSignout = async () => {
         try {
-            const res = await fetch('/api/user/signout', {
-                method: 'POST',
-            });
-            const data = await res.json();
-            if (!res.ok) {
+            const response = await logout()
+            if (!(response.statusText == "OK")) {
                 console.log(data.message);
             } else {
                 dispatch(signoutSuccess());
@@ -100,7 +99,7 @@ const Header = () => {
                 ) : (
                     <Link to='/sign-in'>
                         <Button gradientDuoTone='purpleToBlue' outline>
-                            Sign In
+                            Login
                         </Button>
                     </Link>
                 )}

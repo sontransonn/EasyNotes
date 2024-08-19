@@ -72,7 +72,47 @@ class authController {
 
     static google = async (req, res, next) => {
         try {
+            const { email, name, googlePhotoUrl } = req.body;
 
+            const user = await User.findOne({ email });
+
+            if (user) {
+                const token = tokenUtil.generateToken(user)
+
+                const { password, ...rest } = user._doc;
+
+                res.cookie('access_token', token, {
+                    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+                })
+
+                return res.status(200).json(rest);
+            } else {
+                const generatedPassword =
+                    Math.random().toString(36).slice(-8) +
+                    Math.random().toString(36).slice(-8);
+
+                const salt = await bcrypt.genSalt(10)
+                const hashedPassword = await bcrypt.hash(generatedPassword, salt);
+
+                const user = await User.create({
+                    username:
+                        name.toLowerCase().split(' ').join('') +
+                        Math.random().toString(9).slice(-4),
+                    email,
+                    password: hashedPassword,
+                    profilePicture: googlePhotoUrl,
+                });
+
+                const token = tokenUtil.generateToken(user)
+
+                const { password, ...rest } = user._doc;
+
+                res.cookie('access_token', token, {
+                    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+                })
+
+                return res.status(200).json(rest);
+            }
         } catch (error) {
             next(error);
         }

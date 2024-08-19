@@ -9,7 +9,7 @@ import { signoutSuccess } from "../../redux/slices/userSlice"
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun } from 'react-icons/fa';
 
-import { logout } from '../../apis/user.api';
+import { logout } from '../../apis/auth.api';
 
 const Header = () => {
     const path = useLocation().pathname;

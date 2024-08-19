@@ -27,6 +27,17 @@ export const login_user = async (formData) => {
     }
 }
 
+export const google = async (formData) => {
+    try {
+        const response = await api.post('/google', formData);
+
+        return response
+    } catch (error) {
+        console.log(error);
+        return error.response
+    }
+}
+
 export const logout = async () => {
     try {
         const response = await api.post('/logout');

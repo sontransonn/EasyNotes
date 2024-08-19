@@ -11,7 +11,7 @@ import {
 
 import OAuth from '../../components/OAuth';
 
-import { login_user } from '../../apis/user.api';
+import { login_user } from '../../apis/auth.api';
 
 const LoginPage = () => {
     const navigate = useNavigate();

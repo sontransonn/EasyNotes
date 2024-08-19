@@ -69,7 +69,17 @@ class userController {
     }
 
     static delete_user_by_userId = async (req, res) => {
+        try {
+            if (!req.user.isAdmin && req.user.id !== req.params.userId) {
+                return next(errorUtil.generateError(403, 'You are not allowed to delete this user'));
+            }
 
+            await User.findByIdAndDelete(req.params.userId);
+
+            res.status(200).json('User has been deleted');
+        } catch (error) {
+            next(error);
+        }
     }
 }
 

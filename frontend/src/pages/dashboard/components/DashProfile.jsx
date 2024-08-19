@@ -23,7 +23,8 @@ import {
 
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
-import { update_user_by_userId } from '../../../apis/user.api';
+import { update_user_by_userId, delete_user_by_userId } from '../../../apis/user.api';
+import { logout } from "../../../apis/auth.api"
 
 const DashProfile = () => {
     const dispatch = useDispatch();
@@ -57,17 +58,6 @@ const DashProfile = () => {
     }, [imageFile]);
 
     const uploadImage = async () => {
-        // service firebase.storage {
-        //   match /b/{bucket}/o {
-        //     match /{allPaths=**} {
-        //       allow read;
-        //       allow write: if
-        //       request.resource.size < 2 * 1024 * 1024 &&
-        //       request.resource.contentType.matches('image/.*')
-        //     }
-        //   }
-        // }
-
         setImageFileUploading(true);
         setImageFileUploadError(null);
 
@@ -110,9 +100,9 @@ const DashProfile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         setUpdateUserError(null);
         setUpdateUserSuccess(null);
-
         if (Object.keys(formData).length === 0) {
             setUpdateUserError('No changes made');
             return;
@@ -124,6 +114,7 @@ const DashProfile = () => {
         }
 
         try {
+            dispatch(updateStart());
             const response = await update_user_by_userId(formData, currentUser._id)
 
             if (!(response.statusText == "OK")) {
@@ -140,10 +131,33 @@ const DashProfile = () => {
     };
 
     const handleDeleteUser = async () => {
+        setShowModal(false);
+        try {
+            dispatch(deleteUserStart());
+
+            const response = await delete_user_by_userId(currentUser._id)
+
+            if (!(response.statusText == "OK")) {
+                dispatch(deleteUserFailure(response.data.message));
+            } else {
+                dispatch(deleteUserSuccess(response.data));
+            }
+        } catch (error) {
+            dispatch(deleteUserFailure(error.message));
+        }
     };
 
     const handleSignout = async () => {
-
+        try {
+            const response = await logout()
+            if (!(response.statusText == "OK")) {
+                console.log(data.message);
+            } else {
+                dispatch(signoutSuccess());
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
     };
 
     return (

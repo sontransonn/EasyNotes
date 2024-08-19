@@ -12,6 +12,15 @@ export const update_user_by_userId = async (formData, userId) => {
         return response
     } catch (error) {
         console.log(error);
-        return error.response
+    }
+}
+
+export const delete_user_by_userId = async (userId) => {
+    try {
+        const response = await api.delete(`/delete/${userId}`);
+
+        return response
+    } catch (error) {
+        console.log(error);
     }
 }

@@ -10,6 +10,8 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import PrivateRoute from './components/PrivateRoute';
 import DashboardPage from './pages/dashboard/DashboardPage';
+import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
+import CreatePostPage from './pages/create-post/CreatePostPage';
 
 const App = () => {
   return (
@@ -26,6 +28,10 @@ const App = () => {
 
           <Route element={<PrivateRoute />}>
             <Route path='/dashboard' element={<DashboardPage />} />
+          </Route>
+
+          <Route element={<OnlyAdminPrivateRoute />}>
+            <Route path='/create-post' element={<CreatePostPage />} />
           </Route>
         </Routes>
       </MainLayout>

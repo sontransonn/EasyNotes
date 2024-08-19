@@ -23,6 +23,8 @@ import {
 
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
+import { update_user_by_userId } from '../../../apis/user.api';
+
 const DashProfile = () => {
     const dispatch = useDispatch();
 
@@ -107,7 +109,34 @@ const DashProfile = () => {
     };
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
+        setUpdateUserError(null);
+        setUpdateUserSuccess(null);
 
+        if (Object.keys(formData).length === 0) {
+            setUpdateUserError('No changes made');
+            return;
+        }
+
+        if (imageFileUploading) {
+            setUpdateUserError('Please wait for image to upload');
+            return;
+        }
+
+        try {
+            const response = await update_user_by_userId(formData, currentUser._id)
+
+            if (!(response.statusText == "OK")) {
+                dispatch(updateFailure(response.data.message));
+                setUpdateUserError(response.data.message);
+            } else {
+                dispatch(updateSuccess(response.data));
+                setUpdateUserSuccess("User's profile updated successfully");
+            }
+        } catch (error) {
+            dispatch(updateFailure(error.message));
+            setUpdateUserError(error.message);
+        }
     };
 
     const handleDeleteUser = async () => {

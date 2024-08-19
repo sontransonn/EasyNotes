@@ -77,7 +77,7 @@ class authController {
             const user = await User.findOne({ email });
 
             if (user) {
-                const token = tokenUtil.generateToken(user)
+                const token = await tokenUtil.generateToken(user)
 
                 const { password, ...rest } = user._doc;
 
@@ -103,7 +103,7 @@ class authController {
                     profilePicture: googlePhotoUrl,
                 });
 
-                const token = tokenUtil.generateToken(user)
+                const token = await tokenUtil.generateToken(user)
 
                 const { password, ...rest } = user._doc;
 

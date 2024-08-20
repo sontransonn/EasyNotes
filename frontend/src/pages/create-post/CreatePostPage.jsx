@@ -14,6 +14,8 @@ import 'react-circular-progressbar/dist/styles.css';
 
 import app from '../../firebase';
 
+import { create_post } from '../../apis/post.api';
+
 const CreatePostPage = () => {
     const navigate = useNavigate();
 
@@ -30,10 +32,14 @@ const CreatePostPage = () => {
                 return;
             }
             setImageUploadError(null);
+
             const storage = getStorage(app);
+
             const fileName = new Date().getTime() + '-' + file.name;
             const storageRef = ref(storage, fileName);
+
             const uploadTask = uploadBytesResumable(storageRef, file);
+
             uploadTask.on(
                 'state_changed',
                 (snapshot) => {
@@ -63,22 +69,14 @@ const CreatePostPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('/api/post/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await res.json();
-            if (!res.ok) {
-                setPublishError(data.message);
-                return;
-            }
+            const response = await create_post(formData)
 
-            if (res.ok) {
+            if (response.statusText !== "Created") {
+                setPublishError(response.data.message);
+                return;
+            } else {
                 setPublishError(null);
-                navigate(`/post/${data.slug}`);
+                navigate(`/post/${response.data.slug}`);
             }
         } catch (error) {
             setPublishError('Something went wrong');

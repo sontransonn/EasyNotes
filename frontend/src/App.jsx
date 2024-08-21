@@ -12,6 +12,9 @@ import PrivateRoute from './components/PrivateRoute';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
 import CreatePostPage from './pages/create-post/CreatePostPage';
+import UpdatePostPage from './pages/update-post/UpdatePostPage';
+
+import PostDetailsPage from './pages/post-details/PostDetailsPage';
 
 const App = () => {
   return (
@@ -32,7 +35,10 @@ const App = () => {
 
           <Route element={<OnlyAdminPrivateRoute />}>
             <Route path='/create-post' element={<CreatePostPage />} />
+            <Route path='/update-post/:postId' element={<UpdatePostPage />} />
           </Route>
+
+          <Route path='/post/:postSlug' element={<PostDetailsPage />} />
         </Routes>
       </MainLayout>
     </BrowserRouter>

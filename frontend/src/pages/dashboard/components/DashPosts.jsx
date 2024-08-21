@@ -5,7 +5,7 @@ import { Modal, Table, Button } from 'flowbite-react';
 
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
-import { getposts } from '../../../apis/post.api';
+import { getposts, deletepost } from '../../../apis/post.api';
 
 const DashPosts = () => {
     const { currentUser } = useSelector((state) => state.user);
@@ -57,15 +57,12 @@ const DashPosts = () => {
     const handleDeletePost = async () => {
         setShowModal(false);
         try {
-            const res = await fetch(
-                `/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
-                {
-                    method: 'DELETE',
-                }
-            );
-            const data = await res.json();
-            if (!res.ok) {
-                console.log(data.message);
+            const response = await deletepost(postIdToDelete, currentUser._id)
+
+            console.log(response);
+
+            if (response.statusText !== "OK") {
+                console.log(response.data.message);
             } else {
                 setUserPosts((prev) =>
                     prev.filter((post) => post._id !== postIdToDelete)

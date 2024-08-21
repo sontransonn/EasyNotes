@@ -5,6 +5,16 @@ const api = axios.create({
     withCredentials: true
 })
 
+export const get_users = async () => {
+    try {
+        const response = await api.get("/getusers");
+
+        return response
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const update_user_by_userId = async (formData, userId) => {
     try {
         const response = await api.put(`/update/${userId}`, formData);

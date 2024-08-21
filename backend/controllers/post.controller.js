@@ -79,12 +79,43 @@ class postController {
         }
     }
 
-    static updatepost = async (req, res) => {
+    static updatepost = async (req, res, next) => {
+        try {
+            if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+                return next(errorUtil.generateError(403, 'You are not allowed to update this post'));
+            }
 
+            const updatedPost = await Post.findByIdAndUpdate(
+                req.params.postId,
+                {
+                    $set: {
+                        title: req.body.title,
+                        content: req.body.content,
+                        category: req.body.category,
+                        image: req.body.image,
+                    },
+                },
+                { new: true }
+            );
+
+            res.status(200).json(updatedPost);
+        } catch (error) {
+            next(error);
+        }
     }
 
     static deletepost = async (req, res) => {
+        try {
+            if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+                return next(errorUtil.generateError(403, 'You are not allowed to delete this post'));
+            }
 
+            await Post.findByIdAndDelete(req.params.postId);
+
+            res.status(200).json('The post has been deleted');
+        } catch (error) {
+            next(error);
+        }
     }
 }
 

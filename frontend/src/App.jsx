@@ -5,6 +5,7 @@ import ScrollToTop from './components/ScrollToTop';
 import MainLayout from './layouts/MainLayout';
 import HomePage from "./pages/home/HomePage"
 import AboutPage from './pages/about/AboutPage';
+import ProjectPage from './pages/project/ProjectPage';
 import SearchPage from './pages/search/SearchPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
@@ -25,6 +26,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/about' element={<AboutPage />} />
+          <Route path='/projects' element={<ProjectPage />} />
           <Route path='/search' element={<SearchPage />} />
           <Route path='/sign-in' element={<LoginPage />} />
           <Route path='/sign-up' element={<RegisterPage />} />

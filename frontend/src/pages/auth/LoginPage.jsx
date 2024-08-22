@@ -52,12 +52,12 @@ const LoginPage = () => {
                 <div className='flex-1'>
                     <Link to='/' className='font-bold dark:text-white text-4xl'>
                         <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-                            Sahand's
+                            WordWave
                         </span>
                         Blog
                     </Link>
                     <p className='text-sm mt-5'>
-                        This is a demo project. You can sign in with your email and password
+                        This is a demo project. You can login with your email and password
                         or with Google.
                     </p>
                 </div>
@@ -65,16 +65,16 @@ const LoginPage = () => {
                 <div className='flex-1'>
                     <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
                         <div>
-                            <Label value='Your email' />
+                            <Label value='Email:' />
                             <TextInput
                                 type='email'
-                                placeholder='name@company.com'
+                                placeholder='name@gmail.com'
                                 id='email'
                                 onChange={handleChange}
                             />
                         </div>
                         <div>
-                            <Label value='Your password' />
+                            <Label value='Password:' />
                             <TextInput
                                 type='password'
                                 placeholder='**********'
@@ -93,15 +93,15 @@ const LoginPage = () => {
                                     <span className='pl-3'>Loading...</span>
                                 </>
                             ) : (
-                                'Sign In'
+                                'Login'
                             )}
                         </Button>
                         <OAuth />
                     </form>
                     <div className='flex gap-2 text-sm mt-5'>
-                        <span>Dont Have an account?</span>
-                        <Link to='/sign-up' className='text-blue-500'>
-                            Sign Up
+                        <span>Don't Have an account?</span>
+                        <Link to='/sign-up' className='text-blue-500 hover:underline'>
+                            Register here
                         </Link>
                     </div>
                     {errorMessage && (

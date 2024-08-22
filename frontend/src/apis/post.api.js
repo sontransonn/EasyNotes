@@ -5,6 +5,26 @@ const api = axios.create({
     withCredentials: true
 })
 
+export const get_posts = async () => {
+    try {
+        const response = await api.get(`/getposts`);
+
+        return response
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const get_posts_by_searchQuery = async (searchQuery) => {
+    try {
+        const response = await api.get(`/getposts?${searchQuery}`);
+
+        return response
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const getposts = async (userId) => {
     try {
         const response = await api.get(`/getposts?userId=${userId}`);

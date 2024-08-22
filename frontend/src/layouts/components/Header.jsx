@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Avatar, Button, Dropdown, Navbar, TextInput } from 'flowbite-react';
+import toast from "react-hot-toast"
 
 import { toggleTheme } from "../../redux/slices/themeSlice"
 import { signoutSuccess } from "../../redux/slices/userSlice"
@@ -23,15 +24,17 @@ const Header = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleSignout = async () => {
-        try {
-            const response = await logout()
-            if (!(response.statusText == "OK")) {
-                console.log(data.message);
-            } else {
+        if (window.confirm("Bạn muốn đăng xuất!")) {
+            try {
+                const response = await logout()
+
+                toast.success("Đăng xuất thành công!")
                 dispatch(signoutSuccess());
+                navigate("/login")
+            } catch (error) {
+                console.log(error);
+                toast.error(error.response.data.message)
             }
-        } catch (error) {
-            console.log(error.message);
         }
     };
 
@@ -50,14 +53,14 @@ const Header = () => {
                 className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'
             >
                 <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-                    Sahand's
+                    WordWave
                 </span>
                 Blog
             </Link>
             <form onSubmit={handleSubmit}>
                 <TextInput
                     type='text'
-                    placeholder='Search...'
+                    placeholder='Tìm kiếm...'
                     rightIcon={AiOutlineSearch}
                     className='hidden lg:inline'
                     value={searchTerm}
@@ -91,15 +94,15 @@ const Header = () => {
                             </span>
                         </Dropdown.Header>
                         <Link to={'/dashboard?tab=profile'}>
-                            <Dropdown.Item>Profile</Dropdown.Item>
+                            <Dropdown.Item>Thông tin cá nhân</Dropdown.Item>
                         </Link>
                         <Dropdown.Divider />
-                        <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
+                        <Dropdown.Item onClick={handleSignout}>Đăng xuất</Dropdown.Item>
                     </Dropdown>
                 ) : (
-                    <Link to='/sign-in'>
+                    <Link to='/login'>
                         <Button gradientDuoTone='purpleToBlue' outline>
-                            Login
+                            Đăng nhập
                         </Button>
                     </Link>
                 )}
@@ -107,13 +110,16 @@ const Header = () => {
             </div>
             <Navbar.Collapse>
                 <Navbar.Link active={path === '/'} as={'div'}>
-                    <Link to='/'>Home</Link>
+                    <Link to='/'>Trang chủ</Link>
                 </Navbar.Link>
                 <Navbar.Link active={path === '/about'} as={'div'}>
-                    <Link to='/about'>About</Link>
+                    <Link to='/about'>Giới thiệu</Link>
                 </Navbar.Link>
-                <Navbar.Link active={path === '/projects'} as={'div'}>
-                    <Link to='/projects'>Projects</Link>
+                <Navbar.Link active={path === '/category'} as={'div'}>
+                    <Link to='/projects'>Danh mục</Link>
+                </Navbar.Link>
+                <Navbar.Link active={path === '/contact'} as={'div'}>
+                    <Link to='/projects'>Liên hệ</Link>
                 </Navbar.Link>
             </Navbar.Collapse>
         </Navbar>

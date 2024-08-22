@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
+import { Button, Label, Spinner, TextInput } from 'flowbite-react';
+import toast from 'react-hot-toast';
 
 import OAuth from '../../components/OAuth';
 
@@ -8,36 +10,44 @@ import { register_user } from '../../apis/auth.api';
 
 const RegisterPage = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const { currentUser } = useSelector((state) => state.user)
 
     const [formData, setFormData] = useState({});
-    const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        if (currentUser) {
+            navigate("/")
+        }
+    }, [])
+
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value.trim()
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (!formData.username || !formData.email || !formData.password) {
-            return setErrorMessage('Please fill out all fields.');
+            toast.error('Vui lòng điền đầy đủ thông tin!');
+            return
         }
+
         try {
             setLoading(true);
-            setErrorMessage(null);
             const response = await register_user(formData)
 
-            if (response.data.success === false) {
-                setLoading(false);
-                setErrorMessage(response.data.message);
-                return
-            }
-
             setLoading(false);
-            navigate('/sign-in');
+            toast.success("Đăng ký thành công!");
+            navigate('/login');
         } catch (error) {
-            setErrorMessage(error.message);
-            setLoading(false);
+            setLoading(false)
+            toast.error(error.response.data.message)
         }
     };
 
@@ -47,29 +57,29 @@ const RegisterPage = () => {
                 <div className='flex-1'>
                     <Link to='/' className='font-bold dark:text-white text-4xl'>
                         <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-                            Sahand's
+                            WordWave
                         </span>
                         Blog
                     </Link>
                     <p className='text-sm mt-5'>
-                        This is a demo project. You can sign up with your email and password
-                        or with Google.
+                        Đây là một dự án demo.
+                        Bạn có thể đăng nhập bằng email và mật khẩu của mình hoặc bằng Google.
                     </p>
                 </div>
 
                 <div className='flex-1'>
                     <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
                         <div>
-                            <Label value='Your username' />
+                            <Label value='Tên người dùng:' />
                             <TextInput
                                 type='text'
-                                placeholder='Username'
+                                placeholder='username'
                                 id='username'
                                 onChange={handleChange}
                             />
                         </div>
                         <div>
-                            <Label value='Your email' />
+                            <Label value='Email:' />
                             <TextInput
                                 type='email'
                                 placeholder='name@company.com'
@@ -78,10 +88,10 @@ const RegisterPage = () => {
                             />
                         </div>
                         <div>
-                            <Label value='Your password' />
+                            <Label value='Mật khẩu:' />
                             <TextInput
                                 type='password'
-                                placeholder='Password'
+                                placeholder='***********'
                                 id='password'
                                 onChange={handleChange}
                             />
@@ -94,25 +104,20 @@ const RegisterPage = () => {
                             {loading ? (
                                 <>
                                     <Spinner size='sm' />
-                                    <span className='pl-3'>Loading...</span>
+                                    <span className='pl-3'>Đang tải...</span>
                                 </>
                             ) : (
-                                'Sign Up'
+                                'Đăng ký'
                             )}
                         </Button>
                         <OAuth />
                     </form>
                     <div className='flex gap-2 text-sm mt-5'>
-                        <span>Have an account?</span>
-                        <Link to='/sign-in' className='text-blue-500'>
-                            Sign In
+                        <span>Bạn đã có tài khoản?</span>
+                        <Link to='/login' className='text-blue-500 hover:underline'>
+                            Đăng nhập ngay!
                         </Link>
                     </div>
-                    {errorMessage && (
-                        <Alert className='mt-5' color='failure'>
-                            {errorMessage}
-                        </Alert>
-                    )}
                 </div>
             </div>
         </div>

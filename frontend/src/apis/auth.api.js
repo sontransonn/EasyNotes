@@ -5,44 +5,30 @@ const api = axios.create({
     withCredentials: true
 })
 
+// Đăng ký 
 export const register_user = async (formData) => {
-    try {
-        const response = await api.post('/register', formData);
+    const response = await api.post('/register', formData);
 
-        return response
-    } catch (error) {
-        console.log(error);
-        return error.response
-    }
+    return response
 }
 
+// Đăng nhập
 export const login_user = async (formData) => {
-    try {
-        const response = await api.post('/login', formData);
+    const response = await api.post('/login', formData);
 
-        return response
-    } catch (error) {
-        console.log(error);
-        return error.response
-    }
+    return response
 }
 
-export const google = async (formData) => {
-    try {
-        const response = await api.post('/google', formData);
+// Đăng nhập với google
+export const login_with_google = async (formData) => {
+    const response = await api.post('/google', formData);
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }
 
+// Đăng xuất
 export const logout = async () => {
-    try {
-        const response = await api.post('/logout');
+    const response = await api.post('/logout');
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }

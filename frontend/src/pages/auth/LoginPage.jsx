@@ -1,13 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Button, Label, Spinner, TextInput } from 'flowbite-react';
+import toast from 'react-hot-toast';
 
-import {
-    signInStart,
-    signInSuccess,
-    signInFailure,
-} from "../../redux/slices/userSlice"
+import { signInSuccess } from "../../redux/slices/userSlice"
 
 import OAuth from '../../components/OAuth';
 
@@ -17,32 +14,44 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { loading, error: errorMessage } = useSelector((state) => state.user);
+    const { currentUser } = useSelector((state) => state.user)
 
     const [formData, setFormData] = useState({});
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (currentUser) {
+            navigate("/")
+        }
+    }, [])
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value.trim()
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (!formData.email || !formData.password) {
-            return dispatch(signInFailure('Please fill all the fields'));
+            toast.error('Vui lòng điền đầy đủ thông tin!');
+            return
         }
+
         try {
-            dispatch(signInStart());
+            setLoading(true)
             const response = await login_user(formData)
+            const data = response.data
 
-            if (response.data.success === false) {
-                dispatch(signInFailure(response.data.message));
-                return
-            }
-
-            dispatch(signInSuccess(response.data));
+            setLoading(false)
+            dispatch(signInSuccess(data));
+            toast.success("Đăng nhập thành công!");
             navigate('/');
         } catch (error) {
-            dispatch(signInFailure(error.message));
+            setLoading(false)
+            toast.error(error.response.data.message)
         }
     };
 
@@ -57,8 +66,8 @@ const LoginPage = () => {
                         Blog
                     </Link>
                     <p className='text-sm mt-5'>
-                        This is a demo project. You can login with your email and password
-                        or with Google.
+                        Đây là một dự án demo.
+                        Bạn có thể đăng nhập bằng email và mật khẩu của mình hoặc bằng Google.
                     </p>
                 </div>
 
@@ -74,7 +83,7 @@ const LoginPage = () => {
                             />
                         </div>
                         <div>
-                            <Label value='Password:' />
+                            <Label value='Mật khẩu:' />
                             <TextInput
                                 type='password'
                                 placeholder='**********'
@@ -90,25 +99,20 @@ const LoginPage = () => {
                             {loading ? (
                                 <>
                                     <Spinner size='sm' />
-                                    <span className='pl-3'>Loading...</span>
+                                    <span className='pl-3'>Đang tải....</span>
                                 </>
                             ) : (
-                                'Login'
+                                'Đăng nhập'
                             )}
                         </Button>
                         <OAuth />
                     </form>
                     <div className='flex gap-2 text-sm mt-5'>
-                        <span>Don't Have an account?</span>
-                        <Link to='/sign-up' className='text-blue-500 hover:underline'>
-                            Register here
+                        <span>Bạn chưa có tài khoản?</span>
+                        <Link to='/register' className='text-blue-500 hover:underline'>
+                            Đăng ký ngay!
                         </Link>
                     </div>
-                    {errorMessage && (
-                        <Alert className='mt-5' color='failure'>
-                            {errorMessage}
-                        </Alert>
-                    )}
                 </div>
             </div>
         </div>

@@ -105,7 +105,7 @@ const DashSidebar = () => {
                         className='cursor-pointer'
                         onClick={handleSignout}
                     >
-                        Sign Out
+                        Đăng xuất
                     </Sidebar.Item>
                 </Sidebar.ItemGroup>
             </Sidebar.Items>

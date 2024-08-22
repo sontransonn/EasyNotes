@@ -162,7 +162,7 @@ const DashProfile = () => {
 
     return (
         <div className='max-w-lg mx-auto p-3 w-full'>
-            <h1 className='my-7 text-center font-semibold text-3xl'>Profile</h1>
+            <h1 className='my-7 text-center font-semibold text-3xl'>Thông tin cá nhân ({currentUser && currentUser.isAdmin ? "Admin" : "User"})</h1>
             <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
                 <input
                     type='file'
@@ -233,7 +233,7 @@ const DashProfile = () => {
                     outline
                     disabled={loading || imageFileUploading}
                 >
-                    {loading ? 'Loading...' : 'Update'}
+                    {loading ? 'Loading...' : 'Cập nhật'}
                 </Button>
                 {currentUser.isAdmin && (
                     <Link to={'/create-post'}>
@@ -242,17 +242,17 @@ const DashProfile = () => {
                             gradientDuoTone='purpleToPink'
                             className='w-full'
                         >
-                            Create a post
+                            Tạo post
                         </Button>
                     </Link>
                 )}
             </form>
             <div className='text-red-500 flex justify-between mt-5'>
                 <span onClick={() => setShowModal(true)} className='cursor-pointer'>
-                    Delete Account
+                    Xóa tài khoản
                 </span>
                 <span onClick={handleSignout} className='cursor-pointer'>
-                    Sign Out
+                    Đăng xuất
                 </span>
             </div>
             {updateUserSuccess && (

@@ -15,6 +15,26 @@ export const get_users = async () => {
     }
 }
 
+export const get_recent_users = async () => {
+    try {
+        const response = await api.get(`/getusers?limit=5`);
+
+        return response
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const get_user_by_userId = async (userId) => {
+    try {
+        const response = await api.get(`/${userId}`);
+
+        return response
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const update_user_by_userId = async (formData, userId) => {
     try {
         const response = await api.put(`/update/${userId}`, formData);

@@ -5,9 +5,9 @@ const api = axios.create({
     withCredentials: true
 })
 
-export const create_post = async (formData) => {
+export const getposts = async (userId) => {
     try {
-        const response = await api.post('/create', formData);
+        const response = await api.get(`/getposts?userId=${userId}`);
 
         return response
     } catch (error) {
@@ -15,9 +15,9 @@ export const create_post = async (formData) => {
     }
 }
 
-export const getposts = async (userId) => {
+export const get_recent_posts = async (limit) => {
     try {
-        const response = await api.get(`/getposts?userId=${userId}`);
+        const response = await api.get(`/getposts?limit=${limit}`);
 
         return response
     } catch (error) {
@@ -38,6 +38,16 @@ export const get_post_by_postId = async (postId) => {
 export const get_post_by_postSlug = async (postSlug) => {
     try {
         const response = await api.get(`/getposts?slug=${postSlug}`);
+
+        return response
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const create_post = async (formData) => {
+    try {
+        const response = await api.post('/create', formData);
 
         return response
     } catch (error) {

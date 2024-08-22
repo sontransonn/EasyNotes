@@ -6,7 +6,7 @@ import PostCard from './components/PostCard';
 import CommentSection from './components/CommentSection';
 import CallToAction from './components/CallToAction';
 
-import { get_post_by_postSlug } from "../../apis/post.api"
+import { get_post_by_postSlug, get_recent_posts } from "../../apis/post.api"
 
 const PostDetailsPage = () => {
     const { postSlug } = useParams();
@@ -40,6 +40,21 @@ const PostDetailsPage = () => {
         };
         fetchPost();
     }, [postSlug]);
+
+    useEffect(() => {
+        try {
+            const fetchRecentPosts = async () => {
+                const response = await get_recent_posts(3);
+
+                if (response.statusText == "OK") {
+                    setRecentPosts(response.data.posts);
+                }
+            };
+            fetchRecentPosts();
+        } catch (error) {
+            console.log(error.message);
+        }
+    }, []);
 
     if (loading)
         return (

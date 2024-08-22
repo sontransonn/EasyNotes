@@ -7,6 +7,13 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 import Comment from './Comment';
 
+import {
+    get_comments,
+    add_comment,
+    like_comment,
+    delete_comment
+} from '../../../apis/comment.api';
+
 const CommentSection = ({ postId }) => {
     const navigate = useNavigate();
 
@@ -21,10 +28,10 @@ const CommentSection = ({ postId }) => {
     useEffect(() => {
         const getComments = async () => {
             try {
-                const res = await fetch(`/api/comment/getPostComments/${postId}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    setComments(data);
+                const response = await get_comments(postId)
+
+                if (response.statusText == "OK") {
+                    setComments(response.data);
                 }
             } catch (error) {
                 console.log(error.message);
@@ -39,18 +46,17 @@ const CommentSection = ({ postId }) => {
                 navigate('/sign-in');
                 return;
             }
-            const res = await fetch(`/api/comment/likeComment/${commentId}`, {
-                method: 'PUT',
-            });
-            if (res.ok) {
-                const data = await res.json();
+
+            const response = await like_comment(commentId)
+
+            if (response.statusText == "OK") {
                 setComments(
                     comments.map((comment) =>
                         comment._id === commentId
                             ? {
                                 ...comment,
-                                likes: data.likes,
-                                numberOfLikes: data.likes.length,
+                                likes: response.data.likes,
+                                numberOfLikes: response.data.likes.length,
                             }
                             : comment
                     )
@@ -76,11 +82,9 @@ const CommentSection = ({ postId }) => {
                 navigate('/sign-in');
                 return;
             }
-            const res = await fetch(`/api/comment/deleteComment/${commentId}`, {
-                method: 'DELETE',
-            });
-            if (res.ok) {
-                const data = await res.json();
+            const response = await delete_comment(commentId)
+
+            if (response.statusText == "OK") {
                 setComments(comments.filter((comment) => comment._id !== commentId));
             }
         } catch (error) {
@@ -94,22 +98,16 @@ const CommentSection = ({ postId }) => {
             return;
         }
         try {
-            const res = await fetch('/api/comment/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    content: comment,
-                    postId,
-                    userId: currentUser._id,
-                }),
-            });
-            const data = await res.json();
-            if (res.ok) {
+            const response = await add_comment({
+                content: comment,
+                postId,
+                userId: currentUser._id,
+            })
+
+            if (response.statusText == "OK") {
                 setComment('');
                 setCommentError(null);
-                setComments([data, ...comments]);
+                setComments([response.data, ...comments]);
             }
         } catch (error) {
             setCommentError(error.message);

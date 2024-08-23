@@ -35,22 +35,16 @@ export const get_user_by_userId = async (userId) => {
     }
 }
 
+// Cập nhật thông tin user theo userId
 export const update_user_by_userId = async (formData, userId) => {
-    try {
-        const response = await api.put(`/update/${userId}`, formData);
+    const response = await api.put(`/update/${userId}`, formData);
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }
 
+// Xóa tài khoản theo userId
 export const delete_user_by_userId = async (userId) => {
-    try {
-        const response = await api.delete(`/delete/${userId}`);
+    const response = await api.delete(`/delete/${userId}`);
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }

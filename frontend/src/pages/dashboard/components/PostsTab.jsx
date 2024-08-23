@@ -7,7 +7,7 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 import { getposts, deletepost } from '../../../apis/post.api';
 
-const DashPosts = () => {
+const PostsTab = () => {
     const { currentUser } = useSelector((state) => state.user);
 
     const [userPosts, setUserPosts] = useState([]);
@@ -175,4 +175,4 @@ const DashPosts = () => {
     )
 }
 
-export default DashPosts
+export default PostsTab

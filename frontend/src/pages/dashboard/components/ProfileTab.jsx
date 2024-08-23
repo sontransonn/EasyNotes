@@ -1,23 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Button, Modal, ModalBody, TextInput } from 'flowbite-react';
 import {
     getDownloadURL,
     getStorage, ref, uploadBytesResumable,
 } from 'firebase/storage';
+import toast from "react-hot-toast"
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
-import app from "../../../firebase"
-
 import {
-    updateStart,
     updateSuccess,
-    updateFailure,
-    deleteUserStart,
     deleteUserSuccess,
-    deleteUserFailure,
     signoutSuccess,
 } from "../../../redux/slices/userSlice"
 
@@ -26,22 +21,37 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { update_user_by_userId, delete_user_by_userId } from '../../../apis/user.api';
 import { logout } from "../../../apis/auth.api"
 
-const DashProfile = () => {
+import app from "../../../firebase"
+
+const ProfileTab = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { currentUser, error, loading } = useSelector((state) => state.user);
+    const { currentUser } = useSelector((state) => state.user);
 
     const [imageFile, setImageFile] = useState(null);
     const [imageFileUrl, setImageFileUrl] = useState(null);
     const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
     const [imageFileUploadError, setImageFileUploadError] = useState(null);
     const [imageFileUploading, setImageFileUploading] = useState(false);
-    const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
-    const [updateUserError, setUpdateUserError] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({});
 
     const filePickerRef = useRef();
+
+    useEffect(() => {
+        if (imageFile) {
+            uploadImage();
+        }
+    }, [imageFile]);
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value
+        });
+    };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -51,12 +61,7 @@ const DashProfile = () => {
         }
     };
 
-    useEffect(() => {
-        if (imageFile) {
-            uploadImage();
-        }
-    }, [imageFile]);
-
+    // Upload image lên firebase
     const uploadImage = async () => {
         setImageFileUploading(true);
         setImageFileUploadError(null);
@@ -94,69 +99,62 @@ const DashProfile = () => {
         );
     };
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value });
-    };
-
+    // Cập nhật thông tin user
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        setUpdateUserError(null);
-        setUpdateUserSuccess(null);
         if (Object.keys(formData).length === 0) {
-            setUpdateUserError('No changes made');
+            toast.error('Chưa có thay đổi để cập nhật!');
             return;
         }
 
         if (imageFileUploading) {
-            setUpdateUserError('Please wait for image to upload');
+            toast.error('Vui lòng chờ để được cập nhật ảnh!');
             return;
         }
 
         try {
-            dispatch(updateStart());
+            setLoading(true)
             const response = await update_user_by_userId(formData, currentUser._id)
 
-            if (!(response.statusText == "OK")) {
-                dispatch(updateFailure(response.data.message));
-                setUpdateUserError(response.data.message);
-            } else {
-                dispatch(updateSuccess(response.data));
-                setUpdateUserSuccess("User's profile updated successfully");
-            }
+            setLoading(false)
+            dispatch(updateSuccess(response.data));
+            toast.success("User đã được cập nhật thành công!");
         } catch (error) {
-            dispatch(updateFailure(error.message));
-            setUpdateUserError(error.message);
+            console.log(error);
+            setLoading(false)
+            toast.error(error.response.data.message)
         }
     };
 
+    // Xóa tài khoản
     const handleDeleteUser = async () => {
         setShowModal(false);
         try {
-            dispatch(deleteUserStart());
-
             const response = await delete_user_by_userId(currentUser._id)
 
-            if (!(response.statusText == "OK")) {
-                dispatch(deleteUserFailure(response.data.message));
-            } else {
-                dispatch(deleteUserSuccess(response.data));
-            }
+            dispatch(deleteUserSuccess(response.data));
+            toast.success("Xóa tài khoản thành công!")
+            navigate('/login')
         } catch (error) {
-            dispatch(deleteUserFailure(error.message));
+            console.log(error);
+            toast.error(error.response.data.message)
         }
     };
 
+    // Đăng xuất
     const handleSignout = async () => {
-        try {
-            const response = await logout()
-            if (!(response.statusText == "OK")) {
-                console.log(data.message);
-            } else {
+        if (window.confirm("Bạn muốn đăng xuất!")) {
+            try {
+                const response = await logout()
+
+                toast.success("Đăng xuất thành công!")
                 dispatch(signoutSuccess());
+                navigate("/login")
+            } catch (error) {
+                console.log(error);
+                toast.error(error.response.data.message)
             }
-        } catch (error) {
-            console.log(error.message);
         }
     };
 
@@ -255,21 +253,8 @@ const DashProfile = () => {
                     Đăng xuất
                 </span>
             </div>
-            {updateUserSuccess && (
-                <Alert color='success' className='mt-5'>
-                    {updateUserSuccess}
-                </Alert>
-            )}
-            {updateUserError && (
-                <Alert color='failure' className='mt-5'>
-                    {updateUserError}
-                </Alert>
-            )}
-            {error && (
-                <Alert color='failure' className='mt-5'>
-                    {error}
-                </Alert>
-            )}
+
+            {/* Modal */}
             <Modal
                 show={showModal}
                 onClose={() => setShowModal(false)}
@@ -281,14 +266,14 @@ const DashProfile = () => {
                     <div className='text-center'>
                         <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
                         <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
-                            Are you sure you want to delete your account?
+                            Bạn có chắc chắn muốn xóa tài khoản của này không?
                         </h3>
                         <div className='flex justify-center gap-4'>
                             <Button color='failure' onClick={handleDeleteUser}>
-                                Yes, I'm sure
+                                Đúng, tôi muốn xóa
                             </Button>
                             <Button color='gray' onClick={() => setShowModal(false)}>
-                                No, cancel
+                                Hủy
                             </Button>
                         </div>
                     </div>
@@ -298,4 +283,4 @@ const DashProfile = () => {
     )
 }
 
-export default DashProfile
+export default ProfileTab

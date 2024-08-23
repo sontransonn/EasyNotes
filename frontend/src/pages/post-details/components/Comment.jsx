@@ -20,9 +20,7 @@ const Comment = ({ comment, onLike, onEdit, onDelete }) => {
             try {
                 const response = await get_user_by_userId(comment.userId)
 
-                if (response.statusText == "OK") {
-                    setUser(response.data);
-                }
+                setUser(response.data);
             } catch (error) {
                 console.log(error.message);
             }
@@ -42,10 +40,8 @@ const Comment = ({ comment, onLike, onEdit, onDelete }) => {
         try {
             const response = await edit_comment(comment._id, editedContent)
 
-            if (response.statusText == "OK") {
-                setIsEditing(false);
-                onEdit(comment, editedContent);
-            }
+            setIsEditing(false);
+            onEdit(comment, editedContent);
         } catch (error) {
             console.log(error.message);
         }

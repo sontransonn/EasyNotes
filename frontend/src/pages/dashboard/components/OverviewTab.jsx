@@ -12,7 +12,7 @@ import {
 
 import { get_recent_users_with_limit } from "../../../apis/user.api"
 import { get_recent_posts_with_limit } from '../../../apis/post.api';
-import { get_recent_comments } from '../../../apis/comment.api';
+import { get_recent_comments_with_limit } from '../../../apis/comment.api';
 
 const OverviewTab = () => {
     const { currentUser } = useSelector((state) => state.user);
@@ -69,13 +69,11 @@ const OverviewTab = () => {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const response = await get_recent_comments(5)
+                const response = await get_recent_comments_with_limit(5)
 
-                if (response.statusText == "OK") {
-                    setComments(response.data.comments);
-                    setTotalComments(response.data.totalComments);
-                    setLastMonthComments(response.data.lastMonthComments);
-                }
+                setComments(response.data.comments);
+                setTotalComments(response.data.totalComments);
+                setLastMonthComments(response.data.lastMonthComments);
             } catch (error) {
                 console.log(error.message);
             }

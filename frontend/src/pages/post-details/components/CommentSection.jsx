@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { Alert, Button, Modal, TextInput, Textarea } from 'flowbite-react';
+import { Button, Modal, Textarea } from 'flowbite-react';
 
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
@@ -20,7 +20,6 @@ const CommentSection = ({ postId }) => {
     const { currentUser } = useSelector((state) => state.user);
 
     const [comment, setComment] = useState('');
-    const [commentError, setCommentError] = useState(null);
     const [comments, setComments] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [commentToDelete, setCommentToDelete] = useState(null);
@@ -30,9 +29,7 @@ const CommentSection = ({ postId }) => {
             try {
                 const response = await get_comments(postId)
 
-                if (response.statusText == "OK") {
-                    setComments(response.data);
-                }
+                setComments(response.data);
             } catch (error) {
                 console.log(error.message);
             }
@@ -43,27 +40,23 @@ const CommentSection = ({ postId }) => {
     const handleLike = async (commentId) => {
         try {
             if (!currentUser) {
-                navigate('/sign-in');
+                navigate('/login');
                 return;
             }
 
             const response = await like_comment(commentId)
 
-            if (response.statusText == "OK") {
-                setComments(
-                    comments.map((comment) =>
-                        comment._id === commentId
-                            ? {
-                                ...comment,
-                                likes: response.data.likes,
-                                numberOfLikes: response.data.likes.length,
-                            }
-                            : comment
-                    )
-                );
-            }
+            setComments(comments.map((comment) =>
+                comment._id === commentId
+                    ? {
+                        ...comment,
+                        likes: response.data.likes,
+                        numberOfLikes: response.data.likes.length,
+                    }
+                    : comment
+            ));
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
         }
     };
 
@@ -79,14 +72,12 @@ const CommentSection = ({ postId }) => {
         setShowModal(false);
         try {
             if (!currentUser) {
-                navigate('/sign-in');
+                navigate('/login');
                 return;
             }
             const response = await delete_comment_by_commentId(commentId)
 
-            if (response.statusText == "OK") {
-                setComments(comments.filter((comment) => comment._id !== commentId));
-            }
+            setComments(comments.filter((comment) => comment._id !== commentId));
         } catch (error) {
             console.log(error.message);
         }
@@ -104,18 +95,15 @@ const CommentSection = ({ postId }) => {
                 userId: currentUser._id,
             })
 
-            if (response.statusText == "OK") {
-                setComment('');
-                setCommentError(null);
-                setComments([response.data, ...comments]);
-            }
+            setComment('');
+            setComments([response.data, ...comments]);
         } catch (error) {
-            setCommentError(error.message);
+            console.log(error);
         }
     };
 
     return (
-        <div className='max-w-2xl mx-auto w-full p-3'>
+        <div className='mx-auto w-full py-3'>
             {currentUser ? (
                 <div className='flex items-center gap-1 my-5 text-gray-500 text-sm'>
                     <p>Signed in as:</p>
@@ -146,7 +134,7 @@ const CommentSection = ({ postId }) => {
                 >
                     <Textarea
                         placeholder='Add a comment...'
-                        rows='3'
+                        rows='5'
                         maxLength='200'
                         onChange={(e) => setComment(e.target.value)}
                         value={comment}
@@ -159,11 +147,6 @@ const CommentSection = ({ postId }) => {
                             Submit
                         </Button>
                     </div>
-                    {commentError && (
-                        <Alert color='failure' className='mt-5'>
-                            {commentError}
-                        </Alert>
-                    )}
                 </form>
             )}
             {comments.length === 0 ? (
@@ -190,12 +173,9 @@ const CommentSection = ({ postId }) => {
                     ))}
                 </>
             )}
-            <Modal
-                show={showModal}
-                onClose={() => setShowModal(false)}
-                popup
-                size='md'
-            >
+
+            {/* Modal */}
+            <Modal show={showModal} onClose={() => setShowModal(false)} popupsize='md'>
                 <Modal.Header />
                 <Modal.Body>
                     <div className='text-center'>

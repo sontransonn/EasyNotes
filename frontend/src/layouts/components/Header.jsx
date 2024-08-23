@@ -110,16 +110,16 @@ const Header = () => {
             </div>
             <Navbar.Collapse>
                 <Navbar.Link active={path === '/'} as={'div'}>
-                    <Link to='/'>Trang chủ</Link>
+                    <Link to='/'>Home</Link>
                 </Navbar.Link>
                 <Navbar.Link active={path === '/about'} as={'div'}>
-                    <Link to='/about'>Giới thiệu</Link>
+                    <Link to='/about'>About</Link>
                 </Navbar.Link>
                 <Navbar.Link active={path === '/category'} as={'div'}>
-                    <Link to='/projects'>Danh mục</Link>
+                    <Link to='/projects'>Category</Link>
                 </Navbar.Link>
                 <Navbar.Link active={path === '/contact'} as={'div'}>
-                    <Link to='/projects'>Liên hệ</Link>
+                    <Link to='/projects'>Contact</Link>
                 </Navbar.Link>
             </Navbar.Collapse>
         </Navbar>

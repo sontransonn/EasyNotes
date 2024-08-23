@@ -49,6 +49,20 @@ class postController {
         }
     }
 
+    static get_post_by_postId = async (req, res, next) => {
+        try {
+            const postId = req.params.postId
+
+            const post = await Post.findOne({ _id: postId })
+
+            return res.json({
+                post
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
     static create = async (req, res, next) => {
         try {
             if (!req.user.isAdmin) {
@@ -85,6 +99,12 @@ class postController {
                 return next(errorUtil.generateError(403, 'You are not allowed to update this post'));
             }
 
+            const slug = req.body.title
+                .split(' ')
+                .join('-')
+                .toLowerCase()
+                .replace(/[^a-zA-Z0-9-]/g, '');
+
             const updatedPost = await Post.findByIdAndUpdate(
                 req.params.postId,
                 {
@@ -93,6 +113,7 @@ class postController {
                         content: req.body.content,
                         category: req.body.category,
                         image: req.body.image,
+                        slug,
                     },
                 },
                 { new: true }

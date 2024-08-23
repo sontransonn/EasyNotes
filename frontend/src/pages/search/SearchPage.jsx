@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Select, TextInput } from 'flowbite-react';
 
-import PostCard from '../post-details/components/PostCard';
+import PostCard from '../../components/PostCard';
 
 import { get_posts_by_searchQuery } from '../../apis/post.api';
 

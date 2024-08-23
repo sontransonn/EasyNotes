@@ -8,12 +8,13 @@ import {
     getDownloadURL,
     getStorage, ref, uploadBytesResumable,
 } from 'firebase/storage';
+import toast from 'react-hot-toast';
 import 'react-quill/dist/quill.snow.css';
 import 'react-circular-progressbar/dist/styles.css';
 
-import app from "../../firebase"
-
 import { get_post_by_postId, update_post } from '../../apis/post.api';
+
+import app from "../../firebase"
 
 const UpdatePostPage = () => {
     const { postId } = useParams();
@@ -25,28 +26,18 @@ const UpdatePostPage = () => {
     const [imageUploadProgress, setImageUploadProgress] = useState(null);
     const [imageUploadError, setImageUploadError] = useState(null);
     const [formData, setFormData] = useState({});
-    const [publishError, setPublishError] = useState(null);
 
     useEffect(() => {
         try {
             const fetchPost = async () => {
                 const response = await get_post_by_postId(postId)
 
-                if (response.statusText !== "OK") {
-                    console.log(response.data.message);
-                    setPublishError(response.data.message);
-                    return;
-                }
-
-                if (response.statusText == "OK") {
-                    setPublishError(null);
-                    setFormData(response.data.posts[0]);
-                }
+                setFormData(response.data.post);
             };
 
             fetchPost();
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
         }
     }, [postId]);
 
@@ -95,17 +86,11 @@ const UpdatePostPage = () => {
         try {
             const response = await update_post(formData, currentUser._id)
 
-            if (response.statusText !== "OK") {
-                setPublishError(response.data.message);
-                return;
-            }
-
-            if (response.statusText == "OK") {
-                setPublishError(null);
-                navigate(`/post/${response.data.slug}`);
-            }
+            toast.success("Post updated successfully!")
+            navigate(`/post/${response.data.slug}`);
         } catch (error) {
-            setPublishError('Something went wrong');
+            console.log(error);
+            toast.error(error.response.data.message)
         }
     };
 
@@ -121,13 +106,19 @@ const UpdatePostPage = () => {
                         id='title'
                         className='flex-1'
                         onChange={(e) =>
-                            setFormData({ ...formData, title: e.target.value })
+                            setFormData(prevFormData => ({
+                                ...prevFormData,
+                                title: e.target.value,
+                            }))
                         }
                         value={formData.title}
                     />
                     <Select
                         onChange={(e) =>
-                            setFormData({ ...formData, category: e.target.value })
+                            setFormData(prevFormData => ({
+                                ...prevFormData,
+                                category: e.target.value,
+                            }))
                         }
                         value={formData.category}
                     >
@@ -178,17 +169,15 @@ const UpdatePostPage = () => {
                     className='h-72 mb-12'
                     required
                     onChange={(value) => {
-                        setFormData({ ...formData, content: value });
+                        setFormData(prevFormData => ({
+                            ...prevFormData,
+                            content: value,
+                        }))
                     }}
                 />
                 <Button type='submit' gradientDuoTone='purpleToPink'>
                     Update post
                 </Button>
-                {publishError && (
-                    <Alert className='mt-5' color='failure'>
-                        {publishError}
-                    </Alert>
-                )}
             </form>
         </div>
     )

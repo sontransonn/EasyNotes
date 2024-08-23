@@ -10,13 +10,13 @@ import ThemeProvider from './components/ThemeProvider.jsx';
 import { store, persistor } from './redux/store.js'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <PersistGate persistor={persistor}>
-      <Provider store={store}>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
-      </Provider>
-    </PersistGate>
-  </StrictMode>,
+  // <StrictMode>
+  <PersistGate persistor={persistor}>
+    <Provider store={store}>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </Provider>
+  </PersistGate>
+  // </StrictMode>,
 )

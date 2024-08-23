@@ -15,7 +15,6 @@ const UsersTab = () => {
     const [showModal, setShowModal] = useState(false);
     const [userIdToDelete, setUserIdToDelete] = useState('');
 
-    // Lấy ra tất cả users
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -32,7 +31,6 @@ const UsersTab = () => {
         }
     }, [currentUser._id]);
 
-    // Xóa user
     const handleDeleteUser = async () => {
         setShowModal(false);
         try {

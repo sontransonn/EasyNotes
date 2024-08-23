@@ -5,7 +5,6 @@ const api = axios.create({
     withCredentials: true
 })
 
-// Lấy ra tất cả comments
 export const get_all_comments = async () => {
     try {
         const response = await api.get(`/getcomments`)
@@ -16,18 +15,13 @@ export const get_all_comments = async () => {
     }
 }
 
-// Lấy ra các comment của từng bài post
 export const get_comments = async (postId) => {
-    try {
-        const response = await api.get(`/getPostComments/${postId}`)
+    const response = await api.get(`/getPostComments/${postId}`)
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }
 
-export const get_recent_comments = async (limit) => {
+export const get_recent_comments_with_limit = async (limit) => {
     try {
         const response = await api.get(`/getcomments?limit=${limit}`)
 
@@ -37,18 +31,12 @@ export const get_recent_comments = async (limit) => {
     }
 }
 
-// Thêm comment 
 export const add_comment = async (formData) => {
-    try {
-        const response = await api.post("/create", formData)
+    const response = await api.post("/create", formData)
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }
 
-// Chỉnh sửa Comment
 export const edit_comment = async (commentId, editedContent) => {
     try {
         const response = await api.put(`/editComment/${commentId}`, { content: editedContent })
@@ -59,7 +47,6 @@ export const edit_comment = async (commentId, editedContent) => {
     }
 }
 
-// 
 export const like_comment = async (commentId) => {
     try {
         const response = await api.put(`/likeComment/${commentId}`)
@@ -70,7 +57,6 @@ export const like_comment = async (commentId) => {
     }
 }
 
-// Xóa comment
 export const delete_comment_by_commentId = async (commentId) => {
     const response = await api.delete(`/deleteComment/${commentId}`)
 

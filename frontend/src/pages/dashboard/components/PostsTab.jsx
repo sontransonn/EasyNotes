@@ -15,7 +15,6 @@ const PostsTab = () => {
     const [showModal, setShowModal] = useState(false);
     const [postIdToDelete, setPostIdToDelete] = useState('');
 
-    // Lấy ra tất cả bài posts
     useEffect(() => {
         const fetchPosts = async () => {
             try {
@@ -33,7 +32,6 @@ const PostsTab = () => {
         }
     }, [currentUser._id]);
 
-    // Xóa post
     const handleDeletePost = async () => {
         setShowModal(false);
         try {

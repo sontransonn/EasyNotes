@@ -15,11 +15,9 @@ const CommentsTab = () => {
     const { currentUser } = useSelector((state) => state.user);
 
     const [comments, setComments] = useState([]);
-    const [showMore, setShowMore] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [commentIdToDelete, setCommentIdToDelete] = useState('');
 
-    // Lấy ra tất cả comments
     useEffect(() => {
         const fetchComments = async () => {
             try {
@@ -36,7 +34,6 @@ const CommentsTab = () => {
         }
     }, [currentUser._id]);
 
-    // Xóa comment
     const handleDeleteComment = async () => {
         setShowModal(false);
         try {

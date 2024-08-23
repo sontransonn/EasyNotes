@@ -5,7 +5,6 @@ const api = axios.create({
     withCredentials: true
 })
 
-// Lấy ra tất cả bài post
 export const get_all_posts = async (userId) => {
     const response = await api.get(`/getposts?userId=${userId}`);
 
@@ -32,7 +31,6 @@ export const get_posts_by_searchQuery = async (searchQuery) => {
     }
 }
 
-// Lấy ra các bài post với limit
 export const get_recent_posts_with_limit = async (limit) => {
     const response = await api.get(`/getposts?limit=${limit}`);
 
@@ -40,13 +38,9 @@ export const get_recent_posts_with_limit = async (limit) => {
 }
 
 export const get_post_by_postId = async (postId) => {
-    try {
-        const response = await api.get(`/getposts?postId=${postId}`);
+    const response = await api.get(`/get_post_by_postId/${postId}`);
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }
 
 export const get_post_by_postSlug = async (postSlug) => {
@@ -59,7 +53,6 @@ export const get_post_by_postSlug = async (postSlug) => {
     }
 }
 
-// Tạo post
 export const create_post = async (formData) => {
     try {
         const response = await api.post('/create', formData);
@@ -70,14 +63,12 @@ export const create_post = async (formData) => {
     }
 }
 
-// Cập nhật post
 export const update_post = async (formData, userId) => {
     const response = await api.put(`/updatepost/${formData._id}/${userId}`, formData);
 
     return response
 }
 
-// Xóa post
 export const delete_post_by_postId = async (postIdToDelete, userId) => {
     const response = await api.delete(`/deletepost/${postIdToDelete}/${userId}`);
 

@@ -5,18 +5,12 @@ const api = axios.create({
     withCredentials: true
 })
 
-// Lấy ra tất cả user
 export const get_all_users = async () => {
-    try {
-        const response = await api.get("/getusers");
+    const response = await api.get("/getusers");
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }
 
-// Lấy ra các user mới nhất với limit
 export const get_recent_users_with_limit = async (limit) => {
     const response = await api.get(`/getusers?limit=${limit}`);
 
@@ -24,23 +18,17 @@ export const get_recent_users_with_limit = async (limit) => {
 }
 
 export const get_user_by_userId = async (userId) => {
-    try {
-        const response = await api.get(`/${userId}`);
+    const response = await api.get(`/${userId}`);
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }
 
-// Cập nhật thông tin user theo userId
 export const update_user_by_userId = async (formData, userId) => {
     const response = await api.put(`/update/${userId}`, formData);
 
     return response
 }
 
-// Xóa tài khoản theo userId
 export const delete_user_by_userId = async (userId) => {
     const response = await api.delete(`/delete/${userId}`);
 

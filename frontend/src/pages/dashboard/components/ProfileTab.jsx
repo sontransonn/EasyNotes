@@ -99,7 +99,6 @@ const ProfileTab = () => {
         );
     };
 
-    // Cập nhật thông tin user
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -127,7 +126,6 @@ const ProfileTab = () => {
         }
     };
 
-    // Xóa tài khoản
     const handleDeleteUser = async () => {
         setShowModal(false);
         try {
@@ -142,7 +140,6 @@ const ProfileTab = () => {
         }
     };
 
-    // Đăng xuất
     const handleSignout = async () => {
         if (window.confirm("You want to log out!")) {
             try {

@@ -5,7 +5,8 @@ const api = axios.create({
     withCredentials: true
 })
 
-export const get_users = async () => {
+// Lấy ra tất cả user
+export const get_all_users = async () => {
     try {
         const response = await api.get("/getusers");
 
@@ -15,14 +16,11 @@ export const get_users = async () => {
     }
 }
 
-export const get_recent_users = async () => {
-    try {
-        const response = await api.get(`/getusers?limit=5`);
+// Lấy ra các user mới nhất với limit
+export const get_recent_users_with_limit = async (limit) => {
+    const response = await api.get(`/getusers?limit=${limit}`);
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }
 
 export const get_user_by_userId = async (userId) => {

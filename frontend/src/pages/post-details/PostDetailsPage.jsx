@@ -6,7 +6,7 @@ import PostCard from './components/PostCard';
 import CommentSection from './components/CommentSection';
 import CallToAction from './components/CallToAction';
 
-import { get_post_by_postSlug, get_recent_posts } from "../../apis/post.api"
+import { get_post_by_postSlug, get_recent_posts_with_limit } from "../../apis/post.api"
 
 const PostDetailsPage = () => {
     const { postSlug } = useParams();
@@ -44,7 +44,7 @@ const PostDetailsPage = () => {
     useEffect(() => {
         try {
             const fetchRecentPosts = async () => {
-                const response = await get_recent_posts(3);
+                const response = await get_recent_posts_with_limit(3);
 
                 if (response.statusText == "OK") {
                     setRecentPosts(response.data.posts);

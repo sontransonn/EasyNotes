@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { Alert, Button, Modal, ModalBody, TextInput } from 'flowbite-react';
+import { Alert, Button, Modal, TextInput } from 'flowbite-react';
 import {
     getDownloadURL,
     getStorage, ref, uploadBytesResumable,
@@ -104,12 +104,12 @@ const ProfileTab = () => {
         e.preventDefault();
 
         if (Object.keys(formData).length === 0) {
-            toast.error('Chưa có thay đổi để cập nhật!');
+            toast.error('There are no changes to update yet!');
             return;
         }
 
         if (imageFileUploading) {
-            toast.error('Vui lòng chờ để được cập nhật ảnh!');
+            toast.error('Please wait for photo update!');
             return;
         }
 
@@ -119,7 +119,7 @@ const ProfileTab = () => {
 
             setLoading(false)
             dispatch(updateSuccess(response.data));
-            toast.success("User đã được cập nhật thành công!");
+            toast.success("User updated successfully!");
         } catch (error) {
             console.log(error);
             setLoading(false)
@@ -134,7 +134,7 @@ const ProfileTab = () => {
             const response = await delete_user_by_userId(currentUser._id)
 
             dispatch(deleteUserSuccess(response.data));
-            toast.success("Xóa tài khoản thành công!")
+            toast.success("Account deleted successfully!")
             navigate('/login')
         } catch (error) {
             console.log(error);
@@ -144,11 +144,11 @@ const ProfileTab = () => {
 
     // Đăng xuất
     const handleSignout = async () => {
-        if (window.confirm("Bạn muốn đăng xuất!")) {
+        if (window.confirm("You want to log out!")) {
             try {
                 const response = await logout()
 
-                toast.success("Đăng xuất thành công!")
+                toast.success("Logout successful!")
                 dispatch(signoutSuccess());
                 navigate("/login")
             } catch (error) {
@@ -160,7 +160,7 @@ const ProfileTab = () => {
 
     return (
         <div className='max-w-lg mx-auto p-3 w-full'>
-            <h1 className='my-7 text-center font-semibold text-3xl'>Thông tin cá nhân ({currentUser && currentUser.isAdmin ? "Admin" : "User"})</h1>
+            <h1 className='my-7 text-center font-semibold text-3xl'>Profile ({currentUser && currentUser.isAdmin ? "Admin" : "User"})</h1>
             <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
                 <input
                     type='file'
@@ -231,7 +231,7 @@ const ProfileTab = () => {
                     outline
                     disabled={loading || imageFileUploading}
                 >
-                    {loading ? 'Loading...' : 'Cập nhật'}
+                    {loading ? 'Loading...' : 'Update'}
                 </Button>
                 {currentUser.isAdmin && (
                     <Link to={'/create-post'}>
@@ -240,17 +240,17 @@ const ProfileTab = () => {
                             gradientDuoTone='purpleToPink'
                             className='w-full'
                         >
-                            Tạo post
+                            Create a new post
                         </Button>
                     </Link>
                 )}
             </form>
             <div className='text-red-500 flex justify-between mt-5'>
                 <span onClick={() => setShowModal(true)} className='cursor-pointer'>
-                    Xóa tài khoản
+                    Delete account
                 </span>
                 <span onClick={handleSignout} className='cursor-pointer'>
-                    Đăng xuất
+                    Logout
                 </span>
             </div>
 
@@ -266,14 +266,14 @@ const ProfileTab = () => {
                     <div className='text-center'>
                         <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
                         <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
-                            Bạn có chắc chắn muốn xóa tài khoản của này không?
+                            Are you sure you want to delete this account?
                         </h3>
                         <div className='flex justify-center gap-4'>
                             <Button color='failure' onClick={handleDeleteUser}>
-                                Đúng, tôi muốn xóa
+                                Yes, I'm sure
                             </Button>
                             <Button color='gray' onClick={() => setShowModal(false)}>
-                                Hủy
+                                No, cancel
                             </Button>
                         </div>
                     </div>

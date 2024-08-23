@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 
-import DashSidebar from './components/DashSidebar';
+import TabBar from './components/TabBar';
+import OverviewTab from './components/OverviewTab';
 import ProfileTab from './components/ProfileTab';
 import PostsTab from './components/PostsTab';
-import DashUsers from './components/DashUsers';
-import DashComments from './components/DashComments';
-import DashboardComp from './components/DashboardComp';
+import UsersTab from './components/UsersTab';
+import CommentsTab from './components/CommentsTab';
 
 const DashboardPage = () => {
     const location = useLocation();
@@ -25,18 +25,18 @@ const DashboardPage = () => {
         <div className='min-h-screen flex flex-col md:flex-row'>
             <div className='md:w-56'>
                 {/* Sidebar */}
-                <DashSidebar />
+                <TabBar />
             </div>
+            {/* dashboard comp */}
+            {tab === 'dash' && <OverviewTab />}
             {/* profile... */}
             {tab === 'profile' && <ProfileTab />}
             {/* posts... */}
             {tab === 'posts' && <PostsTab />}
             {/* users */}
-            {tab === 'users' && <DashUsers />}
+            {tab === 'users' && <UsersTab />}
             {/* comments  */}
-            {tab === 'comments' && <DashComments />}
-            {/* dashboard comp */}
-            {tab === 'dash' && <DashboardComp />}
+            {tab === 'comments' && <CommentsTab />}
         </div>
     )
 }

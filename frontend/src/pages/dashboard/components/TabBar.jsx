@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Sidebar } from 'flowbite-react';
+import toast from 'react-hot-toast';
 
 import { signoutSuccess } from "../../../redux/slices/userSlice"
 
@@ -12,8 +13,9 @@ import {
 
 import { logout } from "../../../apis/auth.api"
 
-const DashSidebar = () => {
+const TabBar = () => {
     const location = useLocation();
+    const navigate = useNavigate()
     const dispatch = useDispatch();
 
     const { currentUser } = useSelector((state) => state.user);
@@ -29,15 +31,17 @@ const DashSidebar = () => {
     }, [location.search]);
 
     const handleSignout = async () => {
-        try {
-            const response = await logout()
-            if (!(response.statusText == "OK")) {
-                console.log(data.message);
-            } else {
+        if (window.confirm("")) {
+            try {
+                const response = await logout()
+
                 dispatch(signoutSuccess());
+                toast.success("Logout successfully!")
+                navigate("/login")
+            } catch (error) {
+                console.log(error);
+                toast.error(error.response.data.message)
             }
-        } catch (error) {
-            console.log(error.message);
         }
     };
 
@@ -105,7 +109,7 @@ const DashSidebar = () => {
                         className='cursor-pointer'
                         onClick={handleSignout}
                     >
-                        Đăng xuất
+                        Logout
                     </Sidebar.Item>
                 </Sidebar.ItemGroup>
             </Sidebar.Items>
@@ -113,4 +117,4 @@ const DashSidebar = () => {
     )
 }
 
-export default DashSidebar
+export default TabBar

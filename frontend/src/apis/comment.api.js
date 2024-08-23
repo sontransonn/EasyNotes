@@ -5,6 +5,17 @@ const api = axios.create({
     withCredentials: true
 })
 
+// Lấy ra tất cả comments
+export const get_all_comments = async () => {
+    try {
+        const response = await api.get(`/getcomments`)
+
+        return response
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 // Lấy ra các comment của từng bài post
 export const get_comments = async (postId) => {
     try {
@@ -19,16 +30,6 @@ export const get_comments = async (postId) => {
 export const get_recent_comments = async (limit) => {
     try {
         const response = await api.get(`/getcomments?limit=${limit}`)
-
-        return response
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export const get_all_comments = async () => {
-    try {
-        const response = await api.get(`/getcomments`)
 
         return response
     } catch (error) {
@@ -70,12 +71,8 @@ export const like_comment = async (commentId) => {
 }
 
 // Xóa comment
-export const delete_comment = async (commentId) => {
-    try {
-        const response = await api.delete(`/deleteComment/${commentId}`)
+export const delete_comment_by_commentId = async (commentId) => {
+    const response = await api.delete(`/deleteComment/${commentId}`)
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }

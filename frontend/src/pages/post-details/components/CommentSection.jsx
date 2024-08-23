@@ -11,7 +11,7 @@ import {
     get_comments,
     add_comment,
     like_comment,
-    delete_comment
+    delete_comment_by_commentId
 } from '../../../apis/comment.api';
 
 const CommentSection = ({ postId }) => {
@@ -82,7 +82,7 @@ const CommentSection = ({ postId }) => {
                 navigate('/sign-in');
                 return;
             }
-            const response = await delete_comment(commentId)
+            const response = await delete_comment_by_commentId(commentId)
 
             if (response.statusText == "OK") {
                 setComments(comments.filter((comment) => comment._id !== commentId));

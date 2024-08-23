@@ -5,6 +5,13 @@ const api = axios.create({
     withCredentials: true
 })
 
+// Lấy ra tất cả bài post
+export const get_all_posts = async (userId) => {
+    const response = await api.get(`/getposts?userId=${userId}`);
+
+    return response
+}
+
 export const get_posts = async () => {
     try {
         const response = await api.get(`/getposts`);
@@ -25,24 +32,11 @@ export const get_posts_by_searchQuery = async (searchQuery) => {
     }
 }
 
-export const getposts = async (userId) => {
-    try {
-        const response = await api.get(`/getposts?userId=${userId}`);
+// Lấy ra các bài post với limit
+export const get_recent_posts_with_limit = async (limit) => {
+    const response = await api.get(`/getposts?limit=${limit}`);
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export const get_recent_posts = async (limit) => {
-    try {
-        const response = await api.get(`/getposts?limit=${limit}`);
-
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }
 
 export const get_post_by_postId = async (postId) => {
@@ -65,6 +59,7 @@ export const get_post_by_postSlug = async (postSlug) => {
     }
 }
 
+// Tạo post
 export const create_post = async (formData) => {
     try {
         const response = await api.post('/create', formData);
@@ -75,22 +70,16 @@ export const create_post = async (formData) => {
     }
 }
 
+// Cập nhật post
 export const update_post = async (formData, userId) => {
-    try {
-        const response = await api.put(`/updatepost/${formData._id}/${userId}`, formData);
+    const response = await api.put(`/updatepost/${formData._id}/${userId}`, formData);
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }
 
-export const deletepost = async (postIdToDelete, userId) => {
-    try {
-        const response = await api.delete(`/deletepost/${postIdToDelete}/${userId}`);
+// Xóa post
+export const delete_post_by_postId = async (postIdToDelete, userId) => {
+    const response = await api.delete(`/deletepost/${postIdToDelete}/${userId}`);
 
-        return response
-    } catch (error) {
-        console.log(error);
-    }
+    return response
 }

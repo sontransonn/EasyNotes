@@ -10,11 +10,11 @@ import {
     HiOutlineUserGroup,
 } from 'react-icons/hi';
 
-import { get_recent_users } from "../../../apis/user.api"
-import { get_recent_posts } from '../../../apis/post.api';
+import { get_recent_users_with_limit } from "../../../apis/user.api"
+import { get_recent_posts_with_limit } from '../../../apis/post.api';
 import { get_recent_comments } from '../../../apis/comment.api';
 
-const DashboardComp = () => {
+const OverviewTab = () => {
     const { currentUser } = useSelector((state) => state.user);
 
     const [users, setUsers] = useState([]);
@@ -27,35 +27,46 @@ const DashboardComp = () => {
     const [lastMonthPosts, setLastMonthPosts] = useState(0);
     const [lastMonthComments, setLastMonthComments] = useState(0);
 
+    // Lấy ra 5 user gần nhất
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await get_recent_users()
+                const response = await get_recent_users_with_limit(5)
 
-                if (response.statusText == "OK") {
-                    setUsers(response.data.users);
-                    setTotalUsers(response.data.totalUsers);
-                    setLastMonthUsers(response.data.lastMonthUsers);
-                }
+                setUsers(response.data.users);
+                setTotalUsers(response.data.totalUsers);
+                setLastMonthUsers(response.data.lastMonthUsers);
             } catch (error) {
-                console.log(error.message);
+                console.log(error);
             }
         };
 
+        if (currentUser.isAdmin) {
+            fetchUsers();
+        }
+    }, [])
+
+    // Lấy ra 5 bài post gần nhất
+    useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await get_recent_posts(5)
+                const response = await get_recent_posts_with_limit(5)
 
-                if (response.statusText == "OK") {
-                    setPosts(response.data.posts);
-                    setTotalPosts(response.data.totalPosts);
-                    setLastMonthPosts(response.data.lastMonthPosts);
-                }
+                setPosts(response.data.posts);
+                setTotalPosts(response.data.totalPosts);
+                setLastMonthPosts(response.data.lastMonthPosts);
             } catch (error) {
-                console.log(error.message);
+                console.log(error);
             }
         };
 
+        if (currentUser.isAdmin) {
+            fetchPosts();
+        }
+    }, [])
+
+    // Lấy ra 5 comment gần nhất
+    useEffect(() => {
         const fetchComments = async () => {
             try {
                 const response = await get_recent_comments(5)
@@ -71,11 +82,9 @@ const DashboardComp = () => {
         };
 
         if (currentUser.isAdmin) {
-            fetchUsers();
-            fetchPosts();
             fetchComments();
         }
-    })
+    }, [])
 
     return (
         <div className='p-3 md:mx-auto'>
@@ -222,4 +231,4 @@ const DashboardComp = () => {
     )
 }
 
-export default DashboardComp
+export default OverviewTab

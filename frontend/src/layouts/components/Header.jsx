@@ -94,15 +94,15 @@ const Header = () => {
                             </span>
                         </Dropdown.Header>
                         <Link to={'/dashboard?tab=profile'}>
-                            <Dropdown.Item>Thông tin cá nhân</Dropdown.Item>
+                            <Dropdown.Item>Profile</Dropdown.Item>
                         </Link>
                         <Dropdown.Divider />
-                        <Dropdown.Item onClick={handleSignout}>Đăng xuất</Dropdown.Item>
+                        <Dropdown.Item onClick={handleSignout}>Logout</Dropdown.Item>
                     </Dropdown>
                 ) : (
                     <Link to='/login'>
                         <Button gradientDuoTone='purpleToBlue' outline>
-                            Đăng nhập
+                            Login
                         </Button>
                     </Link>
                 )}

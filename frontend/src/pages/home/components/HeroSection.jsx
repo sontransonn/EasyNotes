@@ -4,7 +4,7 @@ import Search from './Search'
 
 const HeroSection = () => {
     return (
-        <section className="container justify-between mx-auto flex flex-col px-4 py-5 lg:flex-row">
+        <section className="container max-w-screen-2xl justify-between mx-auto flex flex-col px-4 py-5 lg:flex-row">
             <div className="mt-10 lg:w-1/2">
                 <h1 className="font-roboto text-3xl text-center font-bold text-dark-soft md:text-5xl lg:text-4xl xl:text-5xl lg:text-left lg:max-w-[540px]">
                     Welcome to my Blog

@@ -55,7 +55,6 @@ class authController {
                 return next(errorUtil.generateError(400, 'Invalid password'));
             }
 
-            // Tạo token
             const token = await tokenUtil.generateToken(user)
 
             const { password: pass, ...rest } = user._doc;

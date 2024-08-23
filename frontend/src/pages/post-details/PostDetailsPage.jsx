@@ -63,13 +63,13 @@ const PostDetailsPage = () => {
         );
 
     return (
-        <main className='p-3 flex flex-col max-w-6xl mx-auto min-h-screen'>
-            <h1 className='text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl'>
+        <main className='p-3 flex flex-col max-w-[1350px] mx-auto min-h-screen'>
+            <h1 className='text-3xl mt-4 p-3 text-center font-serif max-w-3xl mx-auto lg:text-4xl'>
                 {post && post.title}
             </h1>
             <Link
                 to={`/search?category=${post && post.category}`}
-                className='self-center mt-5'
+                className='self-center mt-2'
             >
                 <Button color='gray' pill size='xs'>
                     {post && post.category}
@@ -78,7 +78,7 @@ const PostDetailsPage = () => {
             <img
                 src={post && post.image}
                 alt={post && post.title}
-                className='mt-10 max-h-[500px] w-full object-cover'
+                className='mt-5 max-h-[500px] w-full object-cover'
             />
             <div className='flex justify-between py-3 border-b border-slate-500 w-full text-xs'>
                 <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
@@ -95,7 +95,7 @@ const PostDetailsPage = () => {
 
             <div className='flex flex-col justify-center items-center mb-5'>
                 <h1 className='text-xl mt-5'>Recent articles</h1>
-                <div className='flex flex-wrap gap-5 mt-5 justify-center'>
+                <div className='flex mt-5 flex-wrap gap-4 justify-center'>
                     {recentPosts &&
                         recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
                 </div>
